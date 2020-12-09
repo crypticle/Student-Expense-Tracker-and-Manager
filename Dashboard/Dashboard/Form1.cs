@@ -249,11 +249,25 @@ namespace Dashboard
             Decimal value = -1;
             if (decimal.TryParse(startingBalanceField.Text, out value))
             {
-                accounts.Add(new Account(accountNameField.Text, value));
-                if (!incomeAccountDropDown.Items.Contains(accountNameField.Text))
+                if (accountNameField.Text == "")
                 {
-                    incomeAccountDropDown.Items.Add(accountNameField.Text);
-                    expenseAccountComboBox.Items.Add(accountNameField.Text);
+                    MessageBox.Show("Account Name Box Empty", "Error", MessageBoxButtons.OK);
+                }
+                else
+                {
+                    accounts.Add(new Account(accountNameField.Text, value));
+                    if (!incomeAccountDropDown.Items.Contains(accountNameField.Text))
+                    {
+                        incomeAccountDropDown.Items.Add(accountNameField.Text);
+                        expenseAccountComboBox.Items.Add(accountNameField.Text);
+                    }
+
+                    accountNameField.Text = "";
+                    startingBalanceField.Text = "";
+                    incomeAccountDropDown.Text = "";
+                    expenseAccountComboBox.Text = "";
+
+                    MessageBox.Show("Account Added Successfully", "Success", MessageBoxButtons.OK);
                 }
 
             }
@@ -271,13 +285,37 @@ namespace Dashboard
         private void expenseCategorySubmitBtn_Click(object sender, EventArgs e)
         {
             if (!expenseCategoryComboBox.Items.Contains(addExpenseTextBox.Text))
-                expenseCategoryComboBox.Items.Add(addExpenseTextBox.Text);
+            {
+                if (addExpenseTextBox.Text == "")
+                {
+                    MessageBox.Show("Expense Box Empty", "Error", MessageBoxButtons.OK);
+                }
+                else
+                {
+                    expenseCategoryComboBox.Items.Add(addExpenseTextBox.Text);
+                    addExpenseTextBox.Text = "";
+                }
+
+            }
+
         }
 
         private void incomeTypeSubmitBtn_Click(object sender, EventArgs e)
         {
             if (!incomeCategoryDropDown.Items.Contains(incomeTypeTextBox.Text))
-                incomeCategoryDropDown.Items.Add(incomeTypeTextBox.Text);
+            {
+                if (incomeTypeTextBox.Text == "")
+                {
+                    MessageBox.Show("Income Box Empty", "Error", MessageBoxButtons.OK);
+                }
+                else
+                {
+                    incomeCategoryDropDown.Items.Add(incomeTypeTextBox.Text);
+                    incomeTypeTextBox.Text = "";
+                }
+
+            }
+
         }
 
         private void incomePan_Paint(object sender, PaintEventArgs e)
@@ -297,9 +335,20 @@ namespace Dashboard
 
         private void incomeInsertRowBtn_Click(object sender, EventArgs e)
         {
-            incomeTable.Rows.Add(incomeAccountDropDown.SelectedItem, incomeCategoryDropDown.SelectedItem, incomeDateTimePicker.Value, decimal.Parse(incomeValueTextBox.Text));
-            dashboardTable.Merge(incomeTable, false, MissingSchemaAction.Add);
-            dashboardDataGridView.DataSource = RemoveDuplicatesRecords(dashboardTable);
+            if (incomeValueTextBox.Text == "")
+            {
+                MessageBox.Show("Value Box Empty", "Error", MessageBoxButtons.OK);
+            }
+            else
+            {
+                incomeTable.Rows.Add(incomeAccountDropDown.SelectedItem, incomeCategoryDropDown.SelectedItem, incomeDateTimePicker.Value, decimal.Parse(incomeValueTextBox.Text));
+                dashboardTable.Merge(incomeTable, false, MissingSchemaAction.Add);
+                dashboardDataGridView.DataSource = RemoveDuplicatesRecords(dashboardTable);
+
+                incomeValueTextBox.Text = "";
+                MessageBox.Show("Row Added", "Success", MessageBoxButtons.OK);
+            }
+
 
         }
 
@@ -310,9 +359,20 @@ namespace Dashboard
 
         private void expenseInsertRowBtn_Click(object sender, EventArgs e)
         {
-            expenseTable.Rows.Add(expenseAccountComboBox.SelectedItem, expenseCategoryComboBox.SelectedItem, expenseDateTimePicker.Value, decimal.Parse(expenseValueTextBox.Text));
-            dashboardTable.Merge(expenseTable, false, MissingSchemaAction.Add);
-            dashboardDataGridView.DataSource = RemoveDuplicatesRecords(dashboardTable);
+            if (expenseValueTextBox.Text == "")
+            {
+                MessageBox.Show("Value Box Empty", "Error", MessageBoxButtons.OK);
+            }
+            else
+            {
+                expenseTable.Rows.Add(expenseAccountComboBox.SelectedItem, expenseCategoryComboBox.SelectedItem, expenseDateTimePicker.Value, decimal.Parse(expenseValueTextBox.Text));
+                dashboardTable.Merge(expenseTable, false, MissingSchemaAction.Add);
+                dashboardDataGridView.DataSource = RemoveDuplicatesRecords(dashboardTable);
+
+                incomeValueTextBox.Text = "";
+                MessageBox.Show("Row Added", "Success", MessageBoxButtons.OK);
+            }
+
         }
 
         private void timer1_Tick(object sender, EventArgs e)
